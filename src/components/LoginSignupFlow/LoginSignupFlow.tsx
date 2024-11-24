@@ -38,13 +38,26 @@ const LoginSignupModal: React.FC = () => {
     setSelectedTab,
   } = useUser();
 
-  const handleSignup = useCallback(
-    async (values: { name: string; email: string; password: string }) => {
+  const signupFormik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: signupValidationSchema,
+    onSubmit: async (values: {
+      name: string;
+      email: string;
+      password: string;
+    }) => {
       try {
         await signup(values);
         const user = await getUserData();
         updateUser(user);
         setLoginModalOpen(false);
+
+        // Reset the form after successful signup
+        signupFormik.resetForm();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         let errorMessage = "Failed to signup. Please try again.";
@@ -58,17 +71,6 @@ const LoginSignupModal: React.FC = () => {
         console.error("Signup error:", err);
       }
     },
-    [updateUser, setLoginModalOpen]
-  );
-
-  const signupFormik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: signupValidationSchema,
-    onSubmit: handleSignup,
   });
 
   const onClose = useCallback(() => {
@@ -81,6 +83,8 @@ const LoginSignupModal: React.FC = () => {
       await login({ email, password });
       const user = await getUserData();
       updateUser(user);
+      setEmail("");
+      setPassword("");
       onClose();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
