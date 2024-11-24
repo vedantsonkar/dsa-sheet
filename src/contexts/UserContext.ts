@@ -11,6 +11,8 @@ interface UserContextType {
   setSelectedTab: (
     selectedTab: React.SetStateAction<"Login" | "Signup">
   ) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: React.SetStateAction<boolean>) => void;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -21,6 +23,8 @@ const UserContext = createContext<UserContextType>({
   updateUser: () => {},
   logout: () => {},
   setSelectedTab: () => {},
+  isLoading: false,
+  setIsLoading: () => {},
 });
 
 export const useUser = () => useContext(UserContext);

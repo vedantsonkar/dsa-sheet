@@ -6,8 +6,10 @@ import { UserDataType } from "./types";
 import LoginModal from "./components/LoginSignupFlow/LoginSignupFlow";
 import Header from "./components/Header/Header";
 import { getUserData } from "./services/api";
+import Loading from "./components/Loading/Loading";
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<UserDataType | null>(null);
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<"Login" | "Signup">("Signup");
@@ -58,6 +60,8 @@ const App = () => {
         user,
         setSelectedTab,
         selectedTab,
+        isLoading,
+        setIsLoading,
       }}
     >
       <Header />
@@ -66,6 +70,7 @@ const App = () => {
         {/* <Route path="/login" element={<LoginPage />} /> */}
       </Routes>
       <LoginModal />
+      <Loading />
     </UserContext.Provider>
   );
 };

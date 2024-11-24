@@ -4,19 +4,23 @@ import { getUserData, markTopicAsComplete } from "../../services/api";
 import { useUser } from "../../contexts/UserContext";
 
 const Topic: FC<TopicType> = ({ _id, title, subtopics }) => {
-  const { user, updateUser } = useUser();
+  const { user, updateUser, setIsLoading } = useUser();
 
   const handleToggle = useCallback(
     async (topicId: string, subtopicId: number, isComplete: boolean) => {
       try {
+        setIsLoading(true);
         await markTopicAsComplete({ topicId, subtopicId, isComplete });
-        const userData = await getUserData();
-        updateUser(userData);
+        setTimeout(async () => {
+          const userData = await getUserData();
+          updateUser(userData);
+          setIsLoading(false);
+        }, 500);
       } catch (error) {
         console.error("Error", error);
       }
     },
-    [updateUser]
+    [setIsLoading, updateUser]
   );
 
   return (
